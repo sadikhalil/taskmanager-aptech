@@ -1931,3 +1931,152 @@ input[type="date"] {
   .filter-select { width: 100% !important; }
   .mobile-topbar { padding: 0.75rem !important; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   COMPLETE MOBILE SIDEBAR FIX
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ── Sidebar brand row ───────────────────────────────── */
+  .sidebar-brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0.5rem !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    width: 100% !important;
+  }
+
+  .brand-icon {
+    font-size: 1.25rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .brand-name {
+    font-size: 1.1rem !important;
+    flex: 1 !important;
+  }
+
+  /* ── Sidebar itself ──────────────────────────────────── */
+  .sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.875rem !important;
+    padding: 1.25rem !important;
+    width: 270px !important;
+  }
+
+  /* ── User info row ───────────────────────────────────── */
+  .user-info {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .user-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.875rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .user-name  { font-size: 0.875rem !important; }
+  .user-role  { font-size: 0.7rem !important; }
+
+  /* ── Nav items — flex column, compact ───────────────── */
+  .sidebar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+    width: 100% !important;
+  }
+
+  .nav-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.625rem !important;
+    padding: 0.625rem 0.75rem !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .nav-icon {
+    font-size: 0.875rem !important;
+    flex-shrink: 0 !important;
+    width: 18px !important;
+  }
+
+  .nav-badge {
+    margin-left: auto !important;
+    font-size: 0.7rem !important;
+    padding: 0.1rem 0.4rem !important;
+  }
+
+  /* ── Stats row ───────────────────────────────────────── */
+  .sidebar-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    padding: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .stat {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.1rem !important;
+  }
+
+  .stat-value { font-size: 1.1rem !important; }
+  .stat-label { font-size: 0.65rem !important; }
+
+  /* ── Logout button ───────────────────────────────────── */
+  .logout-btn {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.625rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    border-radius: 8px !important;
+  }
+
+  /* ── Hide priority + sort selects on mobile ──────────── */
+  .toolbar-selects {
+    display: none !important;
+  }
+
+  /* ── Search only, clean layout ───────────────────────── */
+  .toolbar {
+    padding: 0.75rem 1rem !important;
+    gap: 0 !important;
+  }
+
+  .search-form {
+    width: 100% !important;
+  }
+
+  .search-input {
+    font-size: 0.9rem !important;
+    padding: 0.625rem 1rem !important;
+  }
+
+  /* ── Task form ───────────────────────────────────────── */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+}
