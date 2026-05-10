@@ -330,10 +330,16 @@ a { color: inherit; text-decoration: none; }
   position: fixed;
   top: 0; left: 0; bottom: 0;
   z-index: 10;
-  gap: 1rem;
-  overflow-y: auto;
-  overflow-x: hidden;
+  gap: 1.5rem;
 }
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.25rem 0;
+}
+
 .brand-icon {
   font-size: 1.5rem;
   color: var(--accent);
@@ -1372,4 +1378,556 @@ input[type="date"] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Dashboard
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Mobile Top Bar (hidden on desktop) ─────────────────────── */
+.mobile-topbar {
+  display: none;
+}
+
+/* ── Mobile Filter Pills (hidden on desktop) ─────────────────── */
+.mobile-filters {
+  display: none;
+}
+
+/* ── Mobile FAB + button (hidden on desktop) ─────────────────── */
+.mobile-fab {
+  display: none;
+}
+
+/* ── Sidebar overlay (hidden on desktop) ─────────────────────── */
+.sidebar-overlay {
+  display: none;
+}
+
+.sidebar-close {
+  display: none;
+}
+
+/* ── Toolbar selects wrapper ─────────────────────────────────── */
+.toolbar-selects {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE — 768px and below
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Layout: no sidebar on mobile ─────────────────────────── */
+  .dashboard {
+    flex-direction: column;
+  }
+
+  /* ── Sidebar: slides in from left ─────────────────────────── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    margin-left: 0 !important;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  /* ── Sidebar overlay ─────────────────────────────────────── */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+    backdrop-filter: blur(2px);
+  }
+
+  /* ── Sidebar close button ────────────────────────────────── */
+  .sidebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+
+  .sidebar-close:hover {
+    background: var(--card-hover);
+    color: var(--text);
+  }
+
+  /* ── Main content: full width ────────────────────────────── */
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 0 6rem 0;
+    min-height: 100vh;
+  }
+
+  /* ── Hide desktop header on mobile ──────────────────────── */
+  .main-header {
+    display: none;
+  }
+
+  /* ── Mobile top bar ──────────────────────────────────────── */
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 1rem;
+  }
+
+  .hamburger-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+
+  .hamburger-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .mobile-brand {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    flex: 1;
+    text-align: center;
+  }
+
+  .mobile-logout-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.2);
+    color: var(--accent-red);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+
+  .mobile-logout-btn:hover {
+    background: rgba(248,113,113,0.2);
+    border-color: var(--accent-red);
+  }
+
+  /* ── Mobile filter pills ─────────────────────────────────── */
+  .mobile-filters {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .mobile-filters::-webkit-scrollbar { display: none; }
+
+  .mobile-filter-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.875rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    background: var(--card-bg);
+  }
+
+  .mobile-filter-pill:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+  }
+
+  .mobile-filter-pill.active {
+    background: rgba(124,106,255,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .pill-badge {
+    background: var(--accent-red);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 0 5px;
+    border-radius: 99px;
+    font-weight: 700;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  /* ── Toolbar ─────────────────────────────────────────────── */
+  .toolbar {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg);
+  }
+
+  .search-form { width: 100%; }
+  .search-input { width: 100%; }
+
+  /* ✅ Fix: selects side by side not stacked */
+  .toolbar-selects {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .filter-select {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  /* ── Task grid ───────────────────────────────────────────── */
+  .task-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 0.875rem;
+  }
+
+  /* ── Loading skeleton ────────────────────────────────────── */
+  .loading-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  /* ── Empty state ─────────────────────────────────────────── */
+  .empty-state {
+    padding: 4rem 1.5rem;
+  }
+
+  /* ── Pagination ──────────────────────────────────────────── */
+  .pagination {
+    margin: 1.5rem 1rem;
+  }
+
+  /* ── Calendar ────────────────────────────────────────────── */
+  .calendar-wrap {
+    margin: 1rem;
+    border-radius: 12px;
+  }
+
+  .cal-cell {
+    min-height: 44px;
+    padding: 0.25rem;
+  }
+
+  .cal-date {
+    font-size: 0.75rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── FAB — floating add button ───────────────────────────── */
+  .mobile-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1.75rem;
+    font-weight: 300;
+    z-index: 150;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    transition: all 0.2s ease;
+    border: none;
+    line-height: 1;
+  }
+
+  .mobile-fab:hover {
+    background: var(--accent-hover);
+    transform: scale(1.08);
+    box-shadow: 0 6px 28px var(--accent-glow);
+  }
+
+  /* ── Modal ───────────────────────────────────────────────── */
+  .modal {
+    margin: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* ── Error banner ────────────────────────────────────────── */
+  .error-banner {
+    margin: 0.75rem 1rem;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SMALL MOBILE — 480px and below
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  .mobile-topbar { padding: 0.875rem 1rem; }
+  .mobile-brand  { font-size: 1rem; }
+  .task-grid     { padding: 0.875rem; gap: 0.75rem; }
+  .toolbar       { padding: 0.875rem; }
+
+  .toolbar-selects { flex-direction: column; }
+  .filter-select   { width: 100%; }
+
+  .mobile-fab {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .cal-grid { gap: 2px; }
+  .cal-cell { min-height: 38px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CRITICAL MOBILE OVERRIDES — must come last
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ── Force sidebar off screen by default ────────────── */
+  .sidebar {
+    transform: translateX(-100%) !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    z-index: 200 !important;
+    transition: transform 0.3s ease !important;
+    overflow-y: auto !important;
+    gap: 1rem !important;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0) !important;
+  }
+
+  /* ── Main content full width ─────────────────────────── */
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    padding-bottom: 5rem !important;
+  }
+
+  /* ── Hide desktop elements ───────────────────────────── */
+  .main-header {
+    display: none !important;
+  }
+
+  /* ── Show mobile elements ────────────────────────────── */
+  .mobile-topbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.875rem 1rem !important;
+    background: var(--bg2) !important;
+    border-bottom: 1px solid var(--border) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    gap: 0.75rem !important;
+  }
+
+  .mobile-filters {
+    display: flex !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1rem !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .mobile-filters::-webkit-scrollbar { display: none !important; }
+
+  .mobile-fab {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 50% !important;
+    background: var(--accent) !important;
+    color: #fff !important;
+    font-size: 1.75rem !important;
+    font-weight: 300 !important;
+    z-index: 150 !important;
+    box-shadow: 0 4px 20px var(--accent-glow) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.55) !important;
+    z-index: 199 !important;
+  }
+
+  .sidebar-close {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    color: var(--text-muted) !important;
+    font-size: 0.875rem !important;
+    flex-shrink: 0 !important;
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+
+  /* ── Fix New Task button width ───────────────────────── */
+  .btn-add {
+    width: auto !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* ── Fix toolbar layout ──────────────────────────────── */
+  .toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.625rem !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  /* Search row — input takes space, button fixed size */
+  .search-form {
+    display: flex !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  .search-input {
+    flex: 1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+    font-size: 0.875rem !important;
+  }
+
+  .search-btn {
+    flex-shrink: 0 !important;
+    width: 44px !important;
+    padding: 0 !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+  }
+
+  /* Selects row — side by side */
+  .toolbar-selects {
+    display: flex !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+  }
+
+  .filter-select {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 0.8rem !important;
+    padding: 0.5rem 0.4rem !important;
+  }
+
+  /* ── Task grid ───────────────────────────────────────── */
+  .task-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0.875rem 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .loading-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  /* ── Modal full width on mobile ──────────────────────── */
+  .modal {
+    margin: 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* ── Calendar ────────────────────────────────────────── */
+  .calendar-wrap {
+    margin: 0.875rem 1rem !important;
+  }
+
+  .cal-cell { min-height: 42px !important; padding: 0.2rem !important; }
+  .cal-date { font-size: 0.7rem !important; width: 18px !important; height: 18px !important; }
+
+  /* ── Pagination ──────────────────────────────────────── */
+  .pagination { margin: 1rem !important; padding-top: 1rem !important; }
+
+  /* ── Empty state ─────────────────────────────────────── */
+  .empty-state { padding: 3rem 1.5rem !important; }
+
+  /* ── Error banner ────────────────────────────────────── */
+  .error-banner { margin: 0.75rem 1rem !important; }
+}
+
+@media (max-width: 480px) {
+  .toolbar-selects {
+    flex-direction: column !important;
+  }
+  .filter-select { width: 100% !important; }
+  .mobile-topbar { padding: 0.75rem !important; }
 }
