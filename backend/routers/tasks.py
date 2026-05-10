@@ -25,21 +25,50 @@ def find_task(tasks, task_id, username):
     return task
 
 
+# ─── GET /tasks/calendar ─────────────────────────────────────────────────────
+@router.get("/calendar")
+def get_calendar_tasks(
+    month: int = Query(..., ge=1, le=12),
+    year:  int = Query(..., ge=2000),
+    current_user: dict = Depends(get_current_user),
+):
+    username  = current_user["username"]
+    all_tasks = read_tasks()
+
+    month_str = f"{year}-{month:02d}"
+
+    # ✅ Fix: safely handle None due_date
+    tasks = [
+        t for t in all_tasks
+        if t["owner"] == username
+        and t.get("due_date") is not None          # skip if None
+        and str(t["due_date"]).startswith(month_str) # safe to call now
+    ]
+
+    # Group by date
+    calendar = {}
+    for t in tasks:
+        d = t["due_date"]
+        calendar.setdefault(d, []).append(t)
+
+    return {"month": month, "year": year, "calendar": calendar}
+
+
 # ─── GET /tasks ───────────────────────────────────────────────────────────────
 @router.get("")
 def get_tasks(
     filter:   str = Query("all"),
     priority: Optional[str] = Query(None),
-    search:   Optional[str] = Query(None, description="Search in title & description"),
+    search:   Optional[str] = Query(None),
     page:     int = Query(1, ge=1),
     limit:    int = Query(10, ge=1, le=100),
-    sort_by:  str = Query("created_at", description="created_at | due_date | priority"),
+    sort_by:  str = Query("created_at"),
     current_user: dict = Depends(get_current_user),
 ):
     if filter not in VALID_FILTERS:
         raise HTTPException(400, f"Invalid filter. Use: {', '.join(VALID_FILTERS)}")
     if priority and priority not in VALID_PRIORITY:
-        raise HTTPException(400, f"Invalid priority. Use: low, medium, high")
+        raise HTTPException(400, "Invalid priority. Use: low, medium, high")
 
     username  = current_user["username"]
     all_tasks = read_tasks()
@@ -54,28 +83,32 @@ def get_tasks(
     elif filter == "pending":
         tasks = [t for t in tasks if not t["completed"]]
     elif filter == "overdue":
-        tasks = [t for t in tasks
-                 if not t["completed"]
-                 and t.get("due_date")
-                 and t["due_date"] < today]
+        tasks = [
+            t for t in tasks
+            if not t["completed"]
+            and t.get("due_date") is not None
+            and str(t["due_date"]) < today
+        ]
 
     # Priority filter
     if priority:
         tasks = [t for t in tasks if t.get("priority") == priority]
 
-    # Search filter (title + description)
+    # Search filter
     if search:
         q = search.strip().lower()
-        tasks = [t for t in tasks
-                 if q in t["title"].lower()
-                 or q in t.get("description","").lower()]
+        tasks = [
+            t for t in tasks
+            if q in t["title"].lower()
+            or q in t.get("description", "").lower()
+        ]
 
     # Sort
     priority_order = {"high": 0, "medium": 1, "low": 2}
     if sort_by == "priority":
-        tasks.sort(key=lambda t: priority_order.get(t.get("priority","medium"), 1))
+        tasks.sort(key=lambda t: priority_order.get(t.get("priority", "medium"), 1))
     elif sort_by == "due_date":
-        tasks.sort(key=lambda t: (t.get("due_date") is None, t.get("due_date","")))
+        tasks.sort(key=lambda t: (t.get("due_date") is None, t.get("due_date") or ""))
     else:
         tasks.sort(key=lambda t: t["created_at"], reverse=True)
 
@@ -97,41 +130,17 @@ def get_tasks(
     }
 
 
-# ─── GET /tasks/calendar ─────────────────────────────────────────────────────
-@router.get("/calendar")
-def get_calendar_tasks(
-    month: int = Query(..., ge=1, le=12),
-    year:  int = Query(..., ge=2000),
-    current_user: dict = Depends(get_current_user),
-):
-    """Return all tasks with due dates in the given month/year."""
-    username  = current_user["username"]
-    all_tasks = read_tasks()
-
-    month_str = f"{year}-{month:02d}"
-    tasks = [
-        t for t in all_tasks
-        if t["owner"] == username
-        and t.get("due_date","").startswith(month_str)
-    ]
-
-    # Group by date
-    calendar = {}
-    for t in tasks:
-        d = t["due_date"]
-        calendar.setdefault(d, []).append(t)
-
-    return {"month": month, "year": year, "calendar": calendar}
-
-
 # ─── POST /tasks ──────────────────────────────────────────────────────────────
 @router.post("", status_code=201)
 def create_task(task: TaskCreate, current_user: dict = Depends(get_current_user)):
     username  = current_user["username"]
     all_tasks = read_tasks()
 
-    if any(t["owner"] == username and t["title"].lower() == task.title.strip().lower()
-           for t in all_tasks):
+    if any(
+        t["owner"] == username
+        and t["title"].lower() == task.title.strip().lower()
+        for t in all_tasks
+    ):
         raise HTTPException(409, f"Task '{task.title.strip()}' already exists.")
 
     now = _now_iso()
@@ -141,7 +150,7 @@ def create_task(task: TaskCreate, current_user: dict = Depends(get_current_user)
         "description": task.description.strip() if task.description else "",
         "completed":   False,
         "priority":    task.priority or "medium",
-        "due_date":    task.due_date or None,
+        "due_date":    task.due_date if task.due_date else None,
         "owner":       username,
         "created_at":  now,
         "updated_at":  now,
@@ -154,12 +163,17 @@ def create_task(task: TaskCreate, current_user: dict = Depends(get_current_user)
 
 # ─── PUT /tasks/:id ───────────────────────────────────────────────────────────
 @router.put("/{task_id}")
-def update_task(task_id: str, update: TaskUpdate,
-                current_user: dict = Depends(get_current_user)):
-    username  = current_user["username"]
+def update_task(
+    task_id: str,
+    update: TaskUpdate,
+    current_user: dict = Depends(get_current_user)
+):
+    username = current_user["username"]
 
-    if all(v is None for v in [update.title, update.description,
-                                update.completed, update.due_date, update.priority]):
+    if all(v is None for v in [
+        update.title, update.description,
+        update.completed, update.due_date, update.priority
+    ]):
         raise HTTPException(400, "No fields provided to update.")
 
     all_tasks = read_tasks()
@@ -167,8 +181,12 @@ def update_task(task_id: str, update: TaskUpdate,
 
     if update.title is not None:
         new_title = update.title.strip()
-        if any(t["owner"] == username and t["title"].lower() == new_title.lower()
-               and t["id"] != task_id for t in all_tasks):
+        if any(
+            t["owner"] == username
+            and t["title"].lower() == new_title.lower()
+            and t["id"] != task_id
+            for t in all_tasks
+        ):
             raise HTTPException(409, f"Another task named '{new_title}' already exists.")
         task["title"] = new_title
 
